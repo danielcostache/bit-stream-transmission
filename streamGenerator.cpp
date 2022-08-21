@@ -17,7 +17,7 @@
 
 std::ofstream out("output.txt");
 std::ofstream outDec("outputDec.txt");
-const int size1 = 12, size2 = 8, size3 = 32, size4 = 48, size5 = 4, size6 = 16;
+const int size1 = 12, size2 = 8, size3 = 32, size4 = 48, size5 = 4, size6 = 16, flushLimit = 100;
 bool bin1[size1], bin2[size2], bin3[size3], bin4[size4], bin5[size5], bin6[size6];
 
 // Generates a number in decimal using the Mersenne Twister engine and then converts it 
@@ -39,37 +39,63 @@ void generateNumberToBinary(int size, bool bin[]) {
 }
 
 int main() {
-    std::vector<bool> buffer;
-    for(int count = 0; count < 50; count++) {
+    std::vector<std::vector<bool>> buffer; // Variable that holds a number of 120-bit buffers to print at once
+    std::vector<bool> tempBuffer; // Temporary buffer written into the main buffer at the end of each iteration
+    int flushCounter = 0; // Counter that manages the flushing of the main buffer
+
+    for(int iterations = 0; iterations < 10; iterations++) {
+        tempBuffer.clear();
+
+        // On every iteration, each variable is generated and then added to the temporary buffer
         generateNumberToBinary(size1, bin1);
         for(int i = 0; i < size1; i++)
-            buffer.push_back(bin1[i]);
+            tempBuffer.push_back(bin1[i]);
         outDec << " ";
         generateNumberToBinary(size2, bin2);
         for(int i = 0; i < size2; i++)
-            buffer.push_back(bin2[i]);
+            tempBuffer.push_back(bin2[i]);
         outDec << " ";
         generateNumberToBinary(size3, bin3);
         for(int i = 0; i < size3; i++)
-            buffer.push_back(bin3[i]);
+            tempBuffer.push_back(bin3[i]);
         outDec << " ";
         generateNumberToBinary(size4, bin4);
         for(int i = 0; i < size4; i++)
-            buffer.push_back(bin4[i]);
+            tempBuffer.push_back(bin4[i]);
         outDec << " ";
         generateNumberToBinary(size5, bin5);
         for(int i = 0; i < size5; i++)
-            buffer.push_back(bin5[i]);
+            tempBuffer.push_back(bin5[i]);
         outDec << " ";
         generateNumberToBinary(size6, bin6);
         for(int i = 0; i < size6; i++)
-            buffer.push_back(bin6[i]);
-        for(bool i : buffer)
-            out << i;
-        out << '\n';
+            tempBuffer.push_back(bin6[i]);
+
+        // At the end of each iteration, the temporary buffer is added to the main buffer 
+        // and the flush condition is checked and if met, the main buffer is printed to 
+        // the output file and then flushed
+        buffer.push_back(tempBuffer);
+        flushCounter++;
+        if(flushCounter >= flushLimit) {
+            flushCounter = 0;
+            for(auto row = buffer.begin(); row != buffer.end(); row++) {
+                for(auto col = row -> begin(); col != row -> end(); col++)
+                    out << *col;
+                out << '\n';            
+            }
+            buffer.clear();
+        }
+        
         outDec << '\n';
-        buffer.clear();
     }
+    // At the end of all the iterations, the leftover buffer is printed to the output file
+    for(auto row = buffer.begin(); row != buffer.end(); row++) {
+        for(auto col = row -> begin(); col != row -> end(); col++)
+            out << *col;
+        out << '\n';            
+    }
+    buffer.clear();
+
     out.close();
     outDec.close();
     return 0;
