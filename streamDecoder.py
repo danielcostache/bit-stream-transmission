@@ -39,13 +39,11 @@ def readCheckLines():
     with open('log.txt', 'w') as log:
         for line in buffer:
             if len(line) < 120:
-                log.write("ERROR! Incomplete expression!")
+                log.write(f"ERROR! Incomplete expression at line: {buffer.index(line) + 1}")
                 raise BitLossError
             elif len(line) > 120:
-                log.write("ERROR! Excess bits in expression!")
+                log.write(f"ERROR! Excess bits in expression at line: {buffer.index(line) + 1}")
                 raise BitExcessError
-            else:
-                log.write(line + "\n")
         log.write("OK!\n")
     return buffer
     
