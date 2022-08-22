@@ -6,6 +6,7 @@
 """
 
 from asyncore import read
+from posixpath import split
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt 
@@ -16,13 +17,6 @@ size3 = 32
 size4 = 48
 size5 = 4
 size6 = 16
-dec1 = []
-dec2 = []
-dec3 = []
-dec4 = []
-dec5 = []
-dec6 = []
-
 
 # Default Error Class
 class Error(Exception):
@@ -35,6 +29,7 @@ class BitLossError(Error):
 # Raised when the expression is more than 120-bit long
 class BitExcessError(Error):
     pass
+
 
 # Reads the incoming data and checks whether it is valid
 def readCheckLines():
@@ -55,46 +50,51 @@ def readCheckLines():
     return buffer
     
     
-
+# Splits the 120-bit expressions into usable variables and appends them 
+# to corresponding lists
 def splitBuffer(buffer):
+    temp = []
+        
     bin1 = buffer[:size1]
     buffer = buffer[size1:]
-    dec1.append(int(bin1, 2))
+    temp.append(int(bin1, 2))
     
     bin2 = buffer[:size2]
     buffer = buffer[size2:]
-    dec2.append(int(bin2, 2))
+    temp.append(int(bin2, 2))
     
     bin3 = buffer[:size3]
     buffer = buffer[size3:]
-    dec3.append(int(bin3, 2))
+    temp.append(int(bin3, 2))
     
     bin4 = buffer[:size4]
     buffer = buffer[size4:]
-    dec4.append(int(bin4, 2))
+    temp.append(int(bin4, 2))
     
     bin5 = buffer[:size5]
     buffer = buffer[size5:]
-    dec5.append(int(bin5, 2))
+    temp.append(int(bin5, 2))
     
     bin6 = buffer[:size6]
     buffer = buffer[size6:]
-    dec6.append(int(bin6, 2))
+    temp.append(int(bin6, 2))
+    
+    return temp
 
 
 def main() -> None:
+    decDF = pd.DataFrame({"Variable 1" : [], "Variable 2" : [], "Variable 3" : [],
+                          "Variable 4" : [], "Variable 5" : [], "Variable 6" : []})
+    
     buffer = readCheckLines()
     for tempBuffer in buffer:
-        splitBuffer(tempBuffer)
-    print(dec1)
-    print(dec2)
-    print(dec3)
-    print(dec4)
-    print(dec5)
-    print(dec6)
+        decDF.loc[len(decDF)] = splitBuffer(tempBuffer)
+    if input("Do you want to read the data or plot the data? [1/2]\n") == '1':
+        print(decDF)
+    else:
+        hist = decDF.hist(edgecolor='black', figsize=(10, 10))
+        plt.show()
     
-
-
 
 if __name__ == '__main__':
     main()
