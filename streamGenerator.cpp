@@ -12,13 +12,9 @@
 */
 
 #include <bits/stdc++.h>
-#include <random>
-#include <time.h>
-#include <bitset>
 
 std::ofstream out("output.txt");
-std::ofstream outDec("outputDec.txt");
-const int size1 = 12, size2 = 8, size3 = 32, size4 = 48, size5 = 4, size6 = 16, flushLimit = 100;
+const int size1 = 12, size2 = 8, size3 = 32, size4 = 48, size5 = 4, size6 = 16, flushLimit = 500, iterations = 1000;
 bool bin1[size1], bin2[size2], bin3[size3], bin4[size4], bin5[size5], bin6[size6];
 
 // Generates a number in decimal using the Mersenne Twister engine and then converts it 
@@ -31,7 +27,6 @@ void generateNumberToBinary(int size, bool bin[]) {
     std::uniform_int_distribution<unsigned long long> distribution;
 
     dec = distribution(engine) % maxNo;
-    outDec << dec << " ";
     while(dec) {
         bin[--i] = dec % 2; 
         dec /= 2;
@@ -44,7 +39,7 @@ int main() {
     std::vector<bool> tempBuffer; // Temporary buffer written into the main buffer at the end of each iteration
     int flushCounter = 0; // Counter that manages the flushing of the main buffer
 
-    for(int iterations = 0; iterations < 500; iterations++) {
+    for(int _ = 0; _ < iterations; _++) {
         tempBuffer.clear();
         std::fill(bin1, bin1+size1, false);
         std::fill(bin2, bin2+size2, false);
@@ -52,6 +47,7 @@ int main() {
         std::fill(bin4, bin4+size4, false);
         std::fill(bin5, bin5+size5, false);
         std::fill(bin6, bin6+size6, false);
+
         // On every iteration, each variable is generated and then added to the temporary buffer
         generateNumberToBinary(size1, bin1);
         tempBuffer.insert(tempBuffer.end(), bin1, bin1+size1);
@@ -80,9 +76,8 @@ int main() {
             }
             buffer.clear();
         }
-        
-        outDec << '\n';
     }
+    
     // At the end of all the iterations, the leftover buffer is printed to the output file
     for(auto row = buffer.begin(); row != buffer.end(); row++) {
         for(auto col = row -> begin(); col != row -> end(); col++)
@@ -92,6 +87,5 @@ int main() {
     buffer.clear();
 
     out.close();
-    outDec.close();
     return 0;
 }

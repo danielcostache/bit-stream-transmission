@@ -1,8 +1,8 @@
 """
     This program receives streams of bits via a text file and decodes them into 
-    usable variables, and then plots them. The program checks for faults in the 
-    bit transmission and signals the user whether the 120-bit expressions are 
-    valid or not. 
+    usable variables, and can then print or plot said data structure. The program 
+    checks for faults in the bit transmission and signals the user whether the 
+    120-bit expressions are valid or not. 
 """
 
 from asyncore import read
