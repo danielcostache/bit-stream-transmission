@@ -33,18 +33,19 @@ class BitExcessError(Error):
 
 # Reads the incoming data and checks whether it is valid
 def readCheckLines():
+    buffer = []
     with open('output.txt', 'r') as inFile:
-        buffer = inFile.readlines()
-        buffer = [line.rstrip() for line in buffer]
-    with open('log.txt', 'w') as log:
-        for line in buffer:
-            if len(line) < 120:
-                log.write(f"ERROR! Incomplete expression at line: {buffer.index(line) + 1}")
-                raise BitLossError
-            elif len(line) > 120:
-                log.write(f"ERROR! Excess bits in expression at line: {buffer.index(line) + 1}")
-                raise BitExcessError
-        log.write("OK!\n")
+        with open('log.txt', 'w') as log:
+            for counter, line in enumerate(inFile, start = 0):
+                line = line.rstrip()
+                if len(line) < 120:
+                    log.write(f"ERROR! Incomplete expression at line: {counter + 1}")
+                    raise BitLossError
+                elif len(line) > 120:
+                    log.write(f"ERROR! Excess bits in expression at line: {counter + 1}")
+                    raise BitExcessError
+                buffer.append(line)     
+            log.write("OK!\n")
     return buffer
     
     
