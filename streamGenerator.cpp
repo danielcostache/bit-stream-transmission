@@ -14,7 +14,7 @@
 #include <bits/stdc++.h>
 
 std::ofstream out("output.txt");
-const int size1 = 12, size2 = 8, size3 = 32, size4 = 48, size5 = 4, size6 = 16, flushLimit = 500, iterations = 1000;
+const int size1 = 12, size2 = 8, size3 = 32, size4 = 48, size5 = 4, size6 = 16, flushLimit = 200, iterations = 1000;
 bool bin1[size1], bin2[size2], bin3[size3], bin4[size4], bin5[size5], bin6[size6];
 
 // Generates a number in decimal using the Mersenne Twister engine and then converts it 

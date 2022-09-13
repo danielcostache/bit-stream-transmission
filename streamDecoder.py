@@ -5,11 +5,9 @@
     120-bit expressions are valid or not. 
 """
 
-from asyncore import read
-from posixpath import split
-import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt 
+import time
 
 size1 = 12
 size2 = 8
@@ -85,9 +83,19 @@ def main() -> None:
     decDF = pd.DataFrame({"Variable 1" : [], "Variable 2" : [], "Variable 3" : [],
                           "Variable 4" : [], "Variable 5" : [], "Variable 6" : []})
     
+    t = time.time()
+
     buffer = readCheckLines()
+    
+    print("Reading:", time.time() - t)
+    t = time.time()
+
     for tempBuffer in buffer:
         decDF.loc[len(decDF)] = splitBuffer(tempBuffer)
+        buffer.pop(buffer.index(tempBuffer))
+    
+    print("Splitting data:", time.time() - t)
+    
     if input("Do you want to read the data or plot the data? [1/2]\n") == '1':
         print(decDF)
     else:
