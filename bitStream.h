@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <random>
 
-const int size1 = 12, size2 = 8, size3 = 32, size4 = 48, size5 = 4, size6 = 16;
+const int size1 = 12, size2 = 8, size3 = 32, size4 = 48, size5 = 4, size6 = 16, iterations = 1000000;
 const char* IO_FORMAT = "%u %u %u %lu %u %u \n";
 
 struct stream {
