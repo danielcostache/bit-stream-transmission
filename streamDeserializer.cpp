@@ -3,6 +3,7 @@
 #include <iostream>
 
 FILE* file;
+FILE* check;
 
 int main() {
     stream* buffer = new stream();
@@ -10,6 +11,7 @@ int main() {
     size_t result;
 
     file = fopen("data.bin", "rb");
+    check = fopen("check.txt", "w");
 
     fseek(file, 0, SEEK_END);
     fileSize = ftell(file);
@@ -23,13 +25,18 @@ int main() {
         exit(3);
     }
 
+    std::cout << result << '\n';
+    std::cout << sizeof(stream) << '\n';
+    
+
     for(int i = 0; i < iterations; i++) {
-        printf(IO_FORMAT, (buffer + i) -> var1, (buffer + i) -> var2, (buffer + i) -> var3,
+        fprintf(check, IO_FORMAT, (buffer + i) -> var1, (buffer + i) -> var2, (buffer + i) -> var3,
                           (buffer + i) -> var4, (buffer + i) -> var5, (buffer + i) -> var6);
     }
+    free(buffer);
 
     fclose(file);
-    free(buffer);
+    fclose(check);
 
     return 0;
 }
